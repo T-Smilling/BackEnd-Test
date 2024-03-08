@@ -1,0 +1,51 @@
+extends ../../layouts/layoutDefault.pug
+include ../../mixins/filterStatus.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/product.pug
+include ../../mixins/selection.pug
+include ../../mixins/alert.pug
+block main 
+
+  +alert(3000)
+
+  h1 Danh sách sản phẩm
+
+
+  .card.mb-3 
+    .card-header Bộ lọc và Tìm kiếm
+    .card-body 
+      .row 
+        .col-6 
+          +filter-status(filterStatus)
+        .col-6 
+          +search(keyword)
+  .card.mb-3 
+    .card-header Danh sách
+      .card-body
+        .row 
+          .col-8 
+            +selection(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+          .col-4 
+            a(
+              href=`${prefixAdmin}/products/create`
+              class="btn btn-outline-success"
+            ) + Thêm mới
+
+        +product(products)
+  +pagination(pagination)
+
+
+  form(
+    action=""
+    method="POST"
+    id="form-change-status"
+    data-path=`${prefixAdmin}/products/change-status`
+  )
+  form(
+    action=""
+    method="POST"
+    id="form-delete"
+    data-path=`${prefixAdmin}/products/delete`
+  )
+  script(src="/admin/js/product.js")
