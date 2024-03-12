@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/product.pug
 include ../../mixins/selection.pug
 include ../../mixins/alert.pug
+include ../../mixins/sort.pug
 block main 
 
   +alert(3000)
@@ -20,6 +21,15 @@ block main
           +filter-status(filterStatus)
         .col-6 
           +search(keyword)
+  
+  .card.mb-3 
+    .card-header Sắp xếp
+    .card-body
+      .row 
+        .col-8 
+          +sort()
+
+
   .card.mb-3 
     .card-header Danh sách
       .card-body

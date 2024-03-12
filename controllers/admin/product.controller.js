@@ -27,7 +27,14 @@ module.exports.index= async(req,res) => {
     req.query,
     countProduct
   );
-  const products= await Product.find(find).sort({position: "desc"}).limit(objectPagination.limitItem).skip(objectPagination.skip);
+    let sort={};
+    if(req.query.sortKey && req.query.sortValue){
+      sort[req.query.sortKey]=req.query.sortValue;
+    }
+    else {
+      sort.position="desc";
+    }
+  const products= await Product.find(find).sort(sort).limit(objectPagination.limitItem).skip(objectPagination.skip);
   
   res.render("admin/pages/products/index",{
     pageTitle:"Danh sách sản phẩm",
@@ -155,4 +162,17 @@ module.exports.editPost=async(req,res) => {
     req.flash("error",`Cập nhật thất bại`);
   }
   res.redirect("back");
+}
+//[GET] admin/products/detail
+module.exports.detailProduct=async(req,res) =>{
+  const id=req.params.id;
+  let find={
+    deleted:false,
+    _id: id
+  }
+  const product= await Product.findOne(find);
+  res.render("admin/pages/products/detail",{
+    pageTitle:"Chi tiết sản phẩm",
+    product:product
+});
 }
