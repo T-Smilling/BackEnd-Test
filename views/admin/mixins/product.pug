@@ -1,3 +1,4 @@
+include ./timeUpdate.pug
 mixin product(products)
   table(
     class="table table-hover table-sm"
@@ -12,7 +13,10 @@ mixin product(products)
         th Tiêu đề
         th Giá
         th Vị trí
-        th Trạng Thái
+        if(role.permissions.includes("products_edit")) 
+          th Trạng Thái
+        th Người tạo
+        th Cập nhật gần nhất
         th Hành động
       
     tbody
@@ -42,33 +46,45 @@ mixin product(products)
               min="1"
               name="position"
             )
+          if(role.permissions.includes("products_edit")) 
+            td
+              if(item.status== "active")
+                a(
+                  href="javascript:;" 
+                  button-change-status
+                  data-status="active"
+                  data-id=item.id
+                  class="badge badge-success"
+                ) Hoạt động
+              else 
+                a(
+                  href="javascript:;" 
+                  button-change-status
+                  data-status="inactive"
+                  data-id=item.id
+                  class="badge badge-danger"
+                ) Dừng hoạt động
           td
-            if(item.status== "active")
-              a(
-                href="javascript:;" 
-                button-change-status
-                data-status="active"
-                data-id=item.id
-                class="badge badge-success"
-              ) Hoạt động
-            else 
-              a(
-                href="javascript:;" 
-                button-change-status
-                data-status="inactive"
-                data-id=item.id
-                class="badge badge-danger"
-              ) Dừng hoạt động
+            if(item.accountFullName)
+              p #{item.accountFullName}
+              +set-time(item.createdBy.createAt)
           td
-            a(
-              href=`${prefixAdmin}/products/edit/${item.id}`
-              class="btn btn-warning btn-sm"
-            ) Sửa
-            button(
-              class="btn btn-danger btn-sm ml-1"
-              button-delete
-              data-id=item.id
-            ) Xóa
+            - const updatedBy=item.updatedBy.slice(-1)[0]
+            if(updatedBy)
+              p #{updatedBy.accountFullName}
+              +set-time(updatedBy.updatedAt)
+          td
+            if(role.permissions.includes("products_edit")) 
+              a(
+                href=`${prefixAdmin}/products/edit/${item.id}`
+                class="btn btn-warning btn-sm"
+              ) Sửa
+            if(role.permissions.includes("products_delete")) 
+              button(
+                class="btn btn-danger btn-sm ml-1"
+                button-delete
+                data-id=item.id
+              ) Xóa
             a(
               href=`${prefixAdmin}/products/detail/${item.id}`
               class="btn btn-primary btn-sm"

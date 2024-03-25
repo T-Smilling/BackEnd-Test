@@ -1,0 +1,34 @@
+extends ../../layouts/layoutDefault.pug
+include ../../mixins/box-head.pug
+
+block main 
+
+  .container.my-3 
+    .row 
+      .col-12 
+        +box-head("Đặt hàng thành công")
+
+    .row 
+      .col-12 
+        div(class="alert alert-success")
+          | Chúc mừng bạn đã đặt hàng thành công! Chúng tôi sẽ xử lý đơn hàng trong thời gian sớm nhất.
+    
+    if(order)
+      .row 
+        .col-6 
+          h4(class="mb-2") Thông tin cá nhân
+          table(class="table table-bordered")
+            tbody
+              tr
+                td Họ tên
+                td 
+                  b #{order.userInfo.fullName}
+              tr
+                td Số điện thoại
+                td 
+                  b #{order.userInfo.phone}
+              tr
+                td Địa chỉ
+                td 
+                  b #{order.userInfo.address}
+                

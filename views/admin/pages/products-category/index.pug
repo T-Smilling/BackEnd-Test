@@ -30,10 +30,11 @@ block main
           .col-8 
             +selection(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
           .col-4 
-            a(
-              href=`${prefixAdmin}/products-category/create`
-              class="btn btn-outline-success"
-            ) + Thêm mới
+            if(role.permissions.includes("products-category_create"))
+              a(
+                href=`${prefixAdmin}/products-category/create`
+                class="btn btn-outline-success"
+              ) + Thêm mới
 
         
     table(
@@ -48,7 +49,8 @@ block main
             th Hình ảnh
             th Tiêu đề
             th Vị trí
-            th Trạng Thái
+            if(role.permissions.includes("products-category_edit"))
+              th Trạng Thái
             th Hành động
           
         tbody

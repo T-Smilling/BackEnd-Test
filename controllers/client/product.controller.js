@@ -1,30 +1,63 @@
 const Product=require("../../models/product.model");
+const ProductCategory=require("../../models/product-category.model");
+const productHelper=require("../../helper/product");
+const productCategoryHelper=require("../../helper/product-category");
 //[GET] /products
 module.exports.index= async (req, res) => {
     const products= await Product.find({
         status:"active",
         deleted:false
     }).sort({position:"desc"});
-    const newProduct=products.map(item => {
-        item.priceNew=(item.price*(100-item.discountPercentage)/100).toFixed(0);
-        return item;
-    });
+
+    const newProduct=productHelper.priceNewProducts(products);
 
     res.render("client/pages/products/index",{
         pageTitle:"Products",
         products:newProduct
     });
 };
-//[GET] /products/detail/:slug
+//[GET] /products/:slugCategory
+module.exports.category=async(req,res)=>{
+    const slugCategory=req.params.slugCategory;
+    const category=await ProductCategory.findOne({
+        slug:slugCategory,
+        deleted:false
+    });
+    const listSubCategory=await productCategoryHelper.getSubCategory(category.id);
+    const listSubCategoryId= listSubCategory.map(item => item.id); 
+
+    const products=await Product.find({
+        product_category_id:{$in:[category.id,...listSubCategoryId]},
+        deleted:false
+    }).sort({position:"desc"});
+    const newProducts=productHelper.priceNewProducts(products);
+    res.render("client/pages/products/index",{
+        pageTitle:category.title,
+        products:newProducts
+    })
+}
+
+
+//[GET] /products/detail/:slugProduct
 module.exports.detailClient= async (req,res) =>{
-    const slug=req.params.slug;
+    const slug=req.params.slugProduct;
     let find={
         deleted:false,
-        slug:slug
+        slug:slug,
     }
-    const products = await Product.findOne(find);
+    const product = await Product.findOne(find);
+    if(product.product_category_id){
+        const category=await ProductCategory.findOne({
+            _id:product.product_category_id,
+            status:"active",
+            deleted:false
+        });
+        product.category=category;
+    }
+    product.priceNew=productHelper.priceNewProduct(product);
     res.render("client/pages/products/detail",{
-        pageTitle:products.title,
-        products:products
+        pageTitle:product.title,
+        product:product
     });
+
 }

@@ -10,6 +10,7 @@ const database = require("./config/database");
 const system = require("./config/system");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const moment = require('moment');
 database.connect();
 
 const app = express();
@@ -26,9 +27,16 @@ app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.locals.prefixAdmin = system.prefixAdmin;
+app.locals.moment=moment;
 
 router(app);
 routerAdmin(app);
+app.get("*",(req,res) => {
+  res.render("client/pages/errors/404",{
+    pageTitle:"404 Not Fount",
+  });
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

@@ -37,10 +37,11 @@ block main
           .col-8 
             +selection(`${prefixAdmin}/products/change-multi?_method=PATCH`)
           .col-4 
-            a(
-              href=`${prefixAdmin}/products/create`
-              class="btn btn-outline-success"
-            ) + Thêm mới
+            if(role.permissions.includes("products_create"))
+              a(
+                href=`${prefixAdmin}/products/create`
+                class="btn btn-outline-success"
+              ) + Thêm mới
 
         +product(products)
   +pagination(pagination)

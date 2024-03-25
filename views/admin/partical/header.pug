@@ -5,4 +5,16 @@ header.header
               .inner-logo 
                 a(href="/admin/dashboard") ADMIN
             .col-9 
+              .inner-queue 
+                a(
+                  href=`${prefixAdmin}/auth/logout`
+                  class="btn btn-danger"
+                  style="float: right"
+                ) Đăng xuất
+                a(
+                  href=`${prefixAdmin}/my-account`
+                  class="btn btn-primary"
+                  account
+                ) #{user.fullName}
+
             
