@@ -62,7 +62,7 @@ module.exports.loginPost=async (req,res) =>{
     _id:req.cookies.cartId
   },
   {
-    user_id: user_id 
+    user_id: user.id 
   })
   res.redirect("/");
 }

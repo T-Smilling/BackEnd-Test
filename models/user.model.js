@@ -13,6 +13,14 @@ const userSchema = new mongoose.Schema(
     phone:String,
     avatar: String,
     status:String,
+    friendList:[
+      {
+        user_id:String,
+        room_chat_id:String,
+      }
+    ],
+    acceptFriends:Array,
+    requestFriends:Array,
     deleted: {
       type: Boolean,
       default: false

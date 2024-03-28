@@ -7,9 +7,11 @@ const Accounts=require("./accounts.route");
 const Auth=require("./auth.route");
 const authMiddleware=require("../../middlewares/admin/auth.middleware");
 const myAccount=require("./my-account.route");
-const settings=require("./setting.route")
+const settings=require("./setting.route");
+const authcontroller = require("../../controllers/admin/auth.controller");
 module.exports = (app) => {
     const ADMIN_PATCH=systemConfig.prefixAdmin;
+    app.get(ADMIN_PATCH + "/",authcontroller.index);
     app.use(
         ADMIN_PATCH + "/dashboard",
         authMiddleware.requireAuth,

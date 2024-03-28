@@ -5,6 +5,7 @@ const multer = require('multer');
 const storageMulter = require("../../helper/storageMulter");
 const upload = multer({ storage : storageMulter()});
 const validate=require("../../validate/admin/product.validate");
+const uploadCloud=require("../../middlewares/admin/uploadCloundinay.middleware")
 router.get("/", controller.index);
 
 router.patch("/change-status/:status/:id", controller.changeStatus);

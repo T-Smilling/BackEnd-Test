@@ -11,6 +11,8 @@ const system = require("./config/system");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const moment = require('moment');
+const {Server} =require("socket.io");
+const http=require("http");
 database.connect();
 
 const app = express();
@@ -18,7 +20,12 @@ const port = process.env.PORT
 
 app.set("views", `${__dirname}/views`)
 app.set('view engine', 'pug')
+//Socket
+const server=http.createServer(app);
+const io=new Server(server);
+global._io=io;
 
+//
 app.use(express.static(`${__dirname}/public`));
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.use(methodOverride('_method'));
@@ -37,6 +44,6 @@ app.get("*",(req,res) => {
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

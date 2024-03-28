@@ -6,9 +6,12 @@ const search=require("./search.route");
 const cart=require("./cart.route");
 const checkout=require("./checkout.route");
 const user=require("./user.route")
-const userMiddleware=require("../../middlewares/client/user.middleware")
-const authMiddleware=require("../../middlewares/client/auth.middleware")
-const settingMiddleware=require("../../middlewares/client/setting.middleware")
+const userMiddleware=require("../../middlewares/client/user.middleware");
+const settingMiddleware=require("../../middlewares/client/setting.middleware");
+const authMiddleware=require("../../middlewares/client/auth.middleware");
+const chat=require("./chat.route");
+const users=require("./users.route")
+
 module.exports = (app) => {
     app.use(categoryMiddleware.category);
     app.use(cartMiddleware.cartId);
@@ -19,5 +22,7 @@ module.exports = (app) => {
     app.use("/",search);
     app.use("/cart",cart);
     app.use("/checkout",checkout);
-    app.use("/user",authMiddleware.requireAuth,user);
+    app.use("/user",user);
+    app.use("/chat",authMiddleware.requireAuth,chat);
+    app.use("/users",users);
 };
