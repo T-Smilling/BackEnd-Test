@@ -11,7 +11,7 @@ const settingMiddleware=require("../../middlewares/client/setting.middleware");
 const authMiddleware=require("../../middlewares/client/auth.middleware");
 const chat=require("./chat.route");
 const users=require("./users.route")
-
+const roomsChatRoutes=require("./roomsChat.route");
 module.exports = (app) => {
     app.use(categoryMiddleware.category);
     app.use(cartMiddleware.cartId);
@@ -19,10 +19,11 @@ module.exports = (app) => {
     app.use(settingMiddleware.settingGeneral);
     app.use("/",home);
     app.use("/products",product);
-    app.use("/",search);
+    app.use("/users",users);
+    app.use("/search",search);
     app.use("/cart",cart);
     app.use("/checkout",checkout);
     app.use("/user",user);
     app.use("/chat",authMiddleware.requireAuth,chat);
-    app.use("/users",users);
+    app.use("/rooms-chat",authMiddleware.requireAuth,roomsChatRoutes);
 };

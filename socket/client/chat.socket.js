@@ -1,11 +1,13 @@
 const Chat=require("../../models/chat.model");
 const uploadToCloudinary=require("../../helper/cloudDinary");
-module.exports=(res)=>{
+module.exports=(req,res)=>{
   const userId=res.locals.user.id;
   const fullName=res.locals.user.fullName;
+  const roomChatId=req.params.roomChatId;
   //SocketIo
   _io.once('connection',(socket)=>{
     socket.on("CLIENT_SEND_MESSAGE", async (data) =>{
+      socket.join(roomChatId);
       const images = [];
       for (const image of data.images) {
         const link = await uploadToCloudinary(image);
@@ -14,12 +16,13 @@ module.exports=(res)=>{
       //Save database
       const chat = new Chat({
         user_id:userId,
+        room_chat_id:roomChatId,
         content:data.content,
         images:images
       });
       await chat.save();
       //Return Data to Client
-      _io.emit("SERVER_RETURN_MESSAGE" ,{
+      _io.to(roomChatId).emit("SERVER_RETURN_MESSAGE" ,{
         userId: userId,
         fullName: fullName,
         content:data.content,
@@ -28,7 +31,7 @@ module.exports=(res)=>{
     });
     //TYPING
     socket.on("CLIENT_SEND_TYPING",(type) =>{
-      socket.broadcast.emit("SERVER_RETURN_TYPING",{
+      socket.broadcast.to(roomChatId).emit("SERVER_RETURN_TYPING",{
         userId:userId,
         fullName:fullName,
         type:type

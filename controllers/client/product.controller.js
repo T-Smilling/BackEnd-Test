@@ -8,7 +8,6 @@ module.exports.index= async (req, res) => {
         status:"active",
         deleted:false
     }).sort({position:"desc"});
-
     const newProduct=productHelper.priceNewProducts(products);
 
     res.render("client/pages/products/index",{

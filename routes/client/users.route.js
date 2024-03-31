@@ -1,7 +1,10 @@
 const express=require("express");
 const router=express.Router();
-const controller=require("../../controllers/client/users.controlller");
+const controller=require("../../controllers/client/users.controller");
 
-router.get("/not-friend",controller.not-friend);
+router.get("/not-friend",controller.notFriend);
+router.get("/request",controller.requestFriend);
+router.get("/accept",controller.acceptFriend);
+router.get("/friends",controller.friendsFriend)
 
 module.exports=router;
